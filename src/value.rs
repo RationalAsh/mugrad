@@ -1,17 +1,25 @@
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, Mul};
 
+#[derive(Debug, Clone)]
+pub enum Op {
+    ADD,
+    MUL,
+    NONE,
+}
+
 /// Struct to represent a value.
 #[derive(Debug, Clone)]
 pub struct Value<T> {
     data: T,
+    op: Op,
 }
 
 /// Implement the Value struct
 impl<T> Value<T> {
     /// Create a new value.
     pub fn new(data: T) -> Self {
-        Value { data }
+        Value { data, op: Op::NONE }
     }
 }
 
@@ -25,6 +33,7 @@ where
     fn add(self, other: Value<T>) -> Value<T> {
         Value {
             data: self.data + other.data,
+            op: Op::ADD,
         }
     }
 }
@@ -39,6 +48,7 @@ where
     fn mul(self, other: Value<T>) -> Value<T> {
         Value {
             data: self.data * other.data,
+            op: Op::MUL,
         }
     }
 }
