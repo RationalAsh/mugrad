@@ -1,5 +1,7 @@
+use petgraph::{Directed, Graph};
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, Mul};
+use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone)]
 pub enum Op {
@@ -8,57 +10,27 @@ pub enum Op {
     NONE,
 }
 
-/// Struct to represent a value.
 #[derive(Debug, Clone)]
 pub struct Value<T> {
-    data: T,
-    op: Op,
+    pub data: T,
 }
 
-/// Implement the Value struct
-impl<T> Value<T> {
-    /// Create a new value.
-    pub fn new(data: T) -> Self {
-        Value { data, op: Op::NONE }
-    }
-}
+impl Add for Value<f64> {
+    type Output = Value<f64>;
 
-/// Implement the Add trait for the Value struct
-impl<T> Add for Value<T>
-where
-    T: Add<Output = T> + Copy,
-{
-    type Output = Value<T>;
-
-    fn add(self, other: Value<T>) -> Value<T> {
+    fn add(self, other: Value<f64>) -> Value<f64> {
         Value {
             data: self.data + other.data,
-            op: Op::ADD,
         }
     }
 }
 
-/// Implement the Mul trait for the Value struct
-impl<T> Mul for Value<T>
-where
-    T: Mul<Output = T> + Copy,
-{
-    type Output = Value<T>;
+impl Mul for Value<f64> {
+    type Output = Value<f64>;
 
-    fn mul(self, other: Value<T>) -> Value<T> {
+    fn mul(self, other: Value<f64>) -> Value<f64> {
         Value {
             data: self.data * other.data,
-            op: Op::MUL,
         }
-    }
-}
-
-/// Implement the Display trait for the Value struct
-impl<T> Display for Value<T>
-where
-    T: Display,
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Value({})", self.data)
     }
 }
